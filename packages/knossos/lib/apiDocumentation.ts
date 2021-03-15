@@ -95,14 +95,28 @@ export function HydraClass(): GraphPointer<NamedNode> {
 export function SystemUser({ root }: Namespaces): GraphPointer<NamedNode> {
   return clownface({ dataset: $rdf.dataset() })
     .namedNode(root('user/SYSTEM'))
-    .addOut(rdf.type, foaf.Agent)
+    .addOut(rdf.type, [foaf.Agent, knossos.SystemAccount])
 }
 
 export function * SystemAuthorizations({ api, root }: Namespaces): Generator<GraphPointer<NamedNode>> {
   yield clownface({ dataset: $rdf.dataset() })
-    .namedNode(api('authorization/system-controls-all'))
+    .namedNode(api('authorization/system-controls-resources'))
     .addOut(rdf.type, acl.Authorization)
     .addOut(acl.accessToClass, hydra.Resource)
+    .addOut(acl.mode, acl.Control)
+    .addOut(acl.agent, root('user/SYSTEM'))
+
+  yield clownface({ dataset: $rdf.dataset() })
+    .namedNode(api('authorization/system-controls-classes'))
+    .addOut(rdf.type, acl.Authorization)
+    .addOut(acl.accessToClass, hydra.Class)
+    .addOut(acl.mode, acl.Control)
+    .addOut(acl.agent, root('user/SYSTEM'))
+
+  yield clownface({ dataset: $rdf.dataset() })
+    .namedNode(api('authorization/system-controls-authorizations'))
+    .addOut(rdf.type, acl.Authorization)
+    .addOut(acl.accessToClass, acl.Authorization)
     .addOut(acl.mode, acl.Control)
     .addOut(acl.agent, root('user/SYSTEM'))
 }

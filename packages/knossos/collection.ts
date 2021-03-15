@@ -8,7 +8,7 @@ import { NamedNode } from 'rdf-js'
 import { fromPointer } from '@rdfine/hydra/lib/IriTemplate'
 import type { ResourceIdentifier } from '@tpluscode/rdfine'
 import clownface, { AnyPointer, GraphPointer } from 'clownface'
-import { shaclValidate } from './lib/shacl'
+import { shaclValidate } from './lib/middleware/shacl'
 import { knossos } from './lib/namespace'
 
 function checkMemberTemplate(ptr: AnyPointer): ptr is GraphPointer<ResourceIdentifier> {

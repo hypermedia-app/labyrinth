@@ -9,6 +9,7 @@ import type * as express from 'express'
 interface Check {
   accessMode: Term[] | Term
   client: StreamClient
+  agent?: Term
 }
 
 interface ResourceCheck extends Check {
@@ -19,26 +20,49 @@ interface TypeCheck extends Check {
   types: Term[]
 }
 
-export function check({ accessMode, client, ...check }: ResourceCheck | TypeCheck): Promise<boolean> {
-  return ASK`
+export async function check({ accessMode, client, agent, ...check }: ResourceCheck | TypeCheck): Promise<Error | null> {
+  if (!agent) {
+    return new error.Unauthorized('No user authenticated')
+  }
+
+  let hasAccess = false
+  if ('term' in check) {
+    hasAccess = await ASK`
+      VALUES ?mode { ${acl.Control} ${accessMode} )
+    
+      ?authorization a ${acl.Authorization} ;
+                     ${acl.mode} ?mode ; 
+                     ${acl.accessTo} ${check.term} ;
+                     ${acl.agent} ${agent}.
+    `.execute(client.query)
+  } else {
+    hasAccess = await ASK`
+    VALUES ?type { ${check.types} }
+    VALUES ?mode { ${acl.Control} ${accessMode} }
+  
     ?authorization a ${acl.Authorization} ;
-                   ${acl.mode} ${accessMode} ; 
-                   ${acl.accessTo} ${check.term} .
+                   ${acl.mode} ?mode ; 
+                   ${acl.accessToClass} ?type ;
+                   ${acl.agent} ${agent} .
   `.execute(client.query)
+  }
+
+  return hasAccess ? null : new error.Unauthorized()
 }
 
 export const middleware = (client: StreamClient): express.RequestHandler => asyncMiddleware(async (req, res, next) => {
-  const accessMode = req.hydra.operation.out(auth.access).term
+  const accessMode = req.hydra.operation?.out(auth.access).term
 
-  const hasAccess = accessMode && await check({
+  const error = accessMode && await check({
     term: req.hydra.term,
     accessMode,
     client,
+    agent: req.user?.id,
   })
 
-  if (hasAccess) {
-    return next()
+  if (error) {
+    return next(error)
   }
 
-  return next(new error.Unauthorized())
+  return next()
 })

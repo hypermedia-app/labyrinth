@@ -19,6 +19,7 @@ services:
         AUTH_AUDIENCE: conduit
         SPARQL_QUERY_ENDPOINT: http://store:3030/labyrinth
         SPARQL_UPDATE_ENDPOINT: http://store:3030/labyrinth
+        SYSTEM_AUTH_KEY: dev-system
       depends_on:
         store:
           condition: service_healthy

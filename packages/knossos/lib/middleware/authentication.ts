@@ -5,9 +5,9 @@ import jwksRsa from 'jwks-rsa'
 
 declare module '@hydrofoil/labyrinth' {
   export interface User {
-    sub: string
-    name: string
-    permissions: string[]
+    sub?: string
+    name?: string
+    permissions?: string[]
   }
 }
 

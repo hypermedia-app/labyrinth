@@ -2,7 +2,7 @@
 
 PUT {{base}}/api/User
 Content-Type: text/turtle
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6Ijk2MDRkMTJiODJkOGEwNjM3N2NkNzI0MzliNGU4MmVkZjFkNjZhMWYifQ.eyJpc3MiOiJodHRwczovL2F1dGgubGFieXJpbnRoLmxuZG8uc2l0ZSIsInN1YiI6IkNpTmpiajFxWVc1bExHOTFQVkJsYjNCc1pTeGtZejFsZUdGdGNHeGxMR1JqUFc5eVp4SUViR1JoY0EiLCJhdWQiOiJjb25kdWl0IiwiZXhwIjoxNjE1ODI2ODg0LCJpYXQiOjE2MTU3NDA0ODQsImF0X2hhc2giOiJJMkVqeG85Mkh2YnQxNU1yMDBMRE93IiwiZW1haWwiOiJqYW5lQGh5cGVybWVkaWEuYXBwIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImdyb3VwcyI6WyJhZG1pbnMiLCJkZXZlbG9wZXJzIl0sIm5hbWUiOiJqYW5lIn0.hGvLtbCPcmkx69Kn4sNFlTctmnUa_ABtWbx3Lv_jDfv0ETYK9iH5lwmoN9Bpbb-ZGBYVHva2A9nwZqbYu-uGBmMrn74MxCmnlA7r3m8UgnAFwFUtrWSP-ZAmS6pqm9FjeF9KO9ovxPBdhiZCyvgmEzwk2fi3S0LopaNnErSdNcxqbSGjvQptg4lKxl1_03F1EGUrdVTzfnNe8S5C0YHad2h8riHCoFOFSF3Jhac4OUeNfEyp6mafm_46p3qt77hycEJiTOsa0ZwGBipdO2m1J8hCWHoDku3SEFij8nD9MdukulvSjrrFgHeB-UzZstwAcTZKg46KuE_csfNtR2yqPQ
+Authorization: System dev-system
 
 < ./resources/api/User.ttl
 
@@ -10,6 +10,7 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6Ijk2MDRkMTJiODJkOGEwNjM3N2NkNz
 
 PUT {{base}}/api/UsersCollection
 Content-Type: text/turtle
+Authorization: System dev-system
 
 < ./resources/api/UsersCollection.ttl
 
@@ -17,11 +18,13 @@ Content-Type: text/turtle
 
 PUT {{base}}/users
 Content-Type: text/turtle
+Authorization: System dev-system
 
 < ./resources/users.ttl
 
 ### Register user john
 POST {{base}}/users
 Content-Type: text/turtle
+Authorization: System dev-system
 
 < ./resources/users/john.ttl

@@ -6,7 +6,7 @@ import error from 'http-errors'
 import httpStatus from 'http-status'
 import { Debugger } from 'debug'
 import { ResourceStore } from './lib/store'
-import { shaclValidate } from './lib/shacl'
+import { shaclValidate } from './lib/middleware/shacl'
 import { knossos } from './lib/namespace'
 import { Router } from 'express'
 import { check } from '../hydra-box-middleware-wac'
@@ -56,14 +56,15 @@ const checkPermissions = (client: StreamClient) => asyncMiddleware(async (req, r
   req.knossos.log('Checking type restrictions')
 
   const types = (await req.resource()).out(rdf.type).terms
-  const hasAccess = await check({
+  const error = await check({
     types,
     accessMode: [acl.Control, acl.Create],
     client,
+    agent: req.user?.id,
   })
 
-  if (!hasAccess) {
-    return next(new error.Unauthorized())
+  if (error) {
+    return next(error)
   }
 
   req.knossos.log('Resource types unrestricted')
